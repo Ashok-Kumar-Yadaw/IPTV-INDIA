@@ -1,23 +1,25 @@
-# IPTV INDIA Web Player v5
+# IPTV INDIA Web Player v6
 
-Major additions:
-- EPG/XMLTV URL field and TV Guide-ready interface
-- Playlist Cleaner with duplicate detection and clean M3U export
-- Favorites and recent channels
-- Settings backup/export and restore/import
-- Grid/List view
-- HLS quality selector where variants are exposed
-- Smart reconnect attempts
-- Cached playlist + background refresh
-- Search/categories/language metadata filtering
-- Dark/light mode and PWA
+New in v6:
+- Multiple M3U playlist sources
+- Source switcher and add-playlist UI
+- Channel-number search
+- EPG/XMLTV URL configuration shell
+- Reminder/notification UI
+- Playlist Cleaner + clean M3U export
+- Favorites, recent channels and local playback analytics
+- Backup/restore for sources, favorites, history and EPG setting
+- HLS quality selector when variants are exposed
+- Smart reconnect and buffering indicators
+- Cached playlists with background refresh
+- Grid/List view, dark/light mode, PWA install
 - Mobile navigation
-- Playlist statistics
 
 Default playlist:
 https://raw.githubusercontent.com/Ashok-Kumar-Yadaw/IPTV-INDIA/main/in.m3u
 
-Important:
-Real programme schedules require a valid XMLTV/EPG feed. The app does not invent EPG data.
-Browser-side health probing of arbitrary remote streams is limited by CORS, DRM, geo-blocking and server policies, so the Health screen does not falsely claim untested streams are online/offline.
-Run through localhost/HTTPS for service worker/PWA features.
+Limitations:
+- Real EPG programme data requires a valid XMLTV source and browser/server CORS access.
+- Browser-side arbitrary stream health checks can be blocked by CORS, DRM, geo restrictions or provider policies.
+- This project does not bypass DRM, geo-blocking, authentication or provider restrictions.
+- Run through localhost/HTTPS for service worker/PWA behavior.
