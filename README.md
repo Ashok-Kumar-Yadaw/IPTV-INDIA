@@ -1,15 +1,28 @@
-# IPTV INDIA Web Player v9
-Performance/Smart-TV focused build.
-- Batched rendering for large playlists
-- D-pad/keyboard navigation and focus
-- Continue Watching, Favorites, Custom Groups, Now/Next
-- HLS quality selection when available
+# IPTV INDIA Premium Web v10
+
+New v10 build focused on smoother large-playlist operation and TV usability.
+
+Highlights:
+- Premium responsive dashboard UI
+- Batched channel rendering (80 cards/frame)
+- Search debounce
+- Category filters
+- Favorites / Recent / Continue Watching
+- Custom channel groups
 - Multiple M3U playlists
-- Debounced search and category filters
-- EPG/reminder UI
-- Diagnostics/statistics
-- Backup/restore
-- Dark/light mode
-- PWA shell cache
-Default playlist: https://raw.githubusercontent.com/Ashok-Kumar-Yadaw/IPTV-INDIA/main/in.m3u
-Browser EPG and streams remain subject to CORS, DRM, authentication and geo restrictions.
+- HLS quality selector when renditions are exposed
+- Player retry state and network indicator
+- Keyboard/D-pad channel navigation
+- Voice search when browser SpeechRecognition is available
+- EPG URL/mapping UI
+- Diagnostics and statistics
+- Backup / restore
+- Dark / light theme
+- PWA install + shell service worker
+- Playlist cache and automatic refresh
+
+Default playlist:
+https://raw.githubusercontent.com/Ashok-Kumar-Yadaw/IPTV-INDIA/main/in.m3u
+
+Important:
+Client-side playback can still be limited by CORS, DRM, authentication, geo restrictions and provider-side availability. The application does not bypass those restrictions.
