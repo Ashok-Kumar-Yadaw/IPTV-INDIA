@@ -1,20 +1,19 @@
 <!doctype html><html lang="hi"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#070b10"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css">
-<link href="https://v.zencdn.net/8.23.4/video-js.css" rel="stylesheet"><title>IPTV INDIA v6</title></head>
-<body>
-<header><div class="brand">📺 <span><b>IPTV INDIA</b><small>Smart TV v6</small></span></div>
-<div class="actions"><button id="install" class="hide">Install</button><button id="theme">🌙</button><button id="settings">⚙</button></div></header>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071018"><link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="style.css"><link href="https://v.zencdn.net/8.23.4/video-js.css" rel="stylesheet">
+<title>IPTV INDIA Smart TV v7</title></head><body>
+<header><div class="brand">📺 <span><b>IPTV INDIA</b><small>Smart TV v7</small></span></div>
+<div><button id="install" class="hide">Install</button><button id="theme">🌙</button><button id="settings">⚙</button></div></header>
 <main>
-<section class="player-card"><div class="player"><video id="player" class="video-js vjs-big-play-centered" controls playsinline preload="metadata"></video><div id="buf" class="badge hide">Buffering…</div><div id="live" class="live hide">● LIVE</div></div>
-<div class="now"><div><b id="now">कोई चैनल चयनित नहीं</b><small id="state">Ready</small></div><div class="pact"><button id="quality">Quality</button><button id="pip">PiP</button><button id="full">Fullscreen</button></div></div></section>
-<div class="quick"><button id="guide">📅 EPG Guide</button><button id="reminders">🔔 Reminders</button><button id="health">🟢 Health</button><button id="clean">🧹 Cleaner</button><button id="stats">📊 Stats</button></div>
-<div class="searchbar"><input id="search" placeholder="🔎 Channel, language, category, number…"><button id="view">▦</button><button id="favOnly">☆ Favorites</button><button id="recentOnly">🕘 Recent</button></div>
-<div class="sourcebar"><select id="source"></select><button id="addSource">＋ Playlist</button></div>
-<div id="cats" class="cats"></div><section id="home"></section>
-<div class="head"><span id="count">Loading…</span><button id="refresh">↻ Refresh</button></div><section id="grid" class="grid"></section>
-</main>
-<nav><button data-n="home">⌂<span>Home</span></button><button data-n="live">▶<span>Live</span></button><button data-n="fav">☆<span>Favorites</span></button><button data-n="guide">📅<span>Guide</span></button><button data-n="settings">⚙<span>Settings</span></button></nav>
+<section class="hero"><div class="player"><video id="player" class="video-js vjs-big-play-centered" controls playsinline preload="metadata"></video><i id="live" class="live hide">● LIVE</i><i id="buffer" class="buffer hide">Buffering…</i></div>
+<div class="now"><div><b id="now">Channel select करें</b><small id="state">Ready</small></div><div class="pact"><button id="prev">◀ Prev</button><button id="next">Next ▶</button><button id="pip">PiP</button><button id="full">Fullscreen</button></div></div></section>
+<div class="toolbar"><button id="guide">📅 EPG</button><button id="reminders">🔔 Reminders</button><button id="health">🟢 Health</button><button id="clean">🧹 Cleaner</button><button id="stats">📊 Stats</button></div>
+<div class="searchrow"><input id="search" placeholder="🔎 Channel, number, language, category…"><button id="favOnly">☆ Favorites</button><button id="recentOnly">🕘 Recent</button><button id="view">▦</button></div>
+<div class="sources"><select id="source"></select><button id="addSource">＋ Playlist</button></div>
+<div id="cats" class="cats"></div><section id="continue"></section><section id="favorites"></section><section id="nownext"></section>
+<div class="sectionHead"><b id="count">Loading…</b><button id="refresh">↻ Refresh</button></div><section id="grid" class="grid"></section>
+</main><nav><button data-nav="top">⌂<span>Home</span></button><button data-nav="live">▶<span>Live</span></button><button data-nav="fav">☆<span>Favorites</span></button><button data-nav="guide">📅<span>Guide</span></button><button data-nav="settings">⚙<span>Settings</span></button></nav>
 <div id="modal" class="modal hide"><div class="dialog"><button id="close" class="x">×</button><div id="modalBody"></div></div></div>
-<footer>IPTV INDIA v6 · Local-first Smart IPTV</footer>
+<footer>IPTV INDIA v7 · Smart TV interface</footer>
 <script src="https://v.zencdn.net/8.23.4/video.min.js"></script><script src="video.js"></script></body></html>
