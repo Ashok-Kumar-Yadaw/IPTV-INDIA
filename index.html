@@ -1,54 +1,35 @@
 <!doctype html>
 <html lang="hi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0b0f14">
-  <meta name="description" content="Fast IPTV INDIA live TV player">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📺</text></svg>">
-  <link href="https://vjs.zencdn.net/8.23.4/video-js.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <title>IPTV INDIA</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080b10"><meta name="description" content="IPTV INDIA modern live TV player">
+<link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css">
+<link href="https://v.zencdn.net/8.23.4/video-js.css" rel="stylesheet"><title>IPTV INDIA</title>
 </head>
 <body>
-<header class="topbar">
-  <div class="brand"><span class="brand-icon">📺</span><div><b>IPTV INDIA</b><small>Fast Live TV</small></div></div>
-  <div class="actions">
-    <button id="installBtn" class="action-btn hidden">Install</button>
-    <button id="themeBtn" class="action-btn" aria-label="Theme">🌙</button>
-  </div>
-</header>
+<header class="topbar"><div class="brand"><span>📺</span><div><b>IPTV INDIA</b><small>Live TV</small></div></div>
+<div class="top-actions"><button id="install" class="btn hidden">Install</button><button id="settings" class="btn">⚙</button><button id="theme" class="btn">🌙</button></div></header>
 
-<main class="wrap">
-  <section class="hero">
-    <div class="player-wrap">
-      <video id="player" class="video-js vjs-big-play-centered" controls playsinline preload="metadata"></video>
-      <div id="buffering" class="buffering hidden"><span></span> Buffering…</div>
-    </div>
-    <div class="player-info">
-      <div>
-        <div id="nowPlaying" class="now">Select a channel</div>
-        <div id="streamStatus" class="muted">Ready</div>
-      </div>
-      <button id="pipBtn" class="small-btn">PiP</button>
-    </div>
-  </section>
+<main>
+<section class="hero"><div class="player-box"><video id="player" class="video-js vjs-big-play-centered" controls playsinline preload="metadata"></video>
+<div id="loader" class="loader hidden">Buffering…</div><div id="liveBadge" class="live-badge hidden">● LIVE</div></div>
+<div class="player-bar"><div><strong id="playing">कोई चैनल चयनित नहीं</strong><small id="status">Ready</small></div>
+<div class="player-actions"><button id="pip">PiP</button><button id="full">Fullscreen</button></div></div></section>
 
-  <section class="controls">
-    <input id="search" type="search" placeholder="🔎 Search channels…" autocomplete="off">
-    <button id="favOnly" class="filter-btn">☆ Favorites</button>
-    <button id="recentOnly" class="filter-btn">🕘 Recent</button>
-  </section>
-
-  <div id="categories" class="categories"></div>
-  <div class="list-head"><span id="count">Loading playlist…</span><button id="refresh" class="link-btn">↻ Refresh</button></div>
-  <section id="grid" class="grid"></section>
+<section class="tools"><input id="search" placeholder="🔎 चैनल, भाषा या category खोजें…" autocomplete="off">
+<button id="fav" class="toggle">☆ Favorites</button><button id="recent" class="toggle">🕘 Recent</button><button id="sort" class="toggle">A–Z</button></section>
+<div id="cats" class="cats"></div>
+<section id="homeRows"></section>
+<div class="list-head"><span id="count">Playlist loading…</span><button id="refresh">↻ Refresh</button></div>
+<section id="grid" class="grid"></section>
 </main>
 
-<footer>IPTV INDIA · <a href="https://github.com/Ashok-Kumar-Yadaw/IPTV-INDIA" target="_blank" rel="noopener">GitHub</a></footer>
+<nav class="bottom"><button data-nav="home">⌂<span>Home</span></button><button data-nav="live">▶<span>Live</span></button><button data-nav="favorites">☆<span>Favorites</span></button><button data-nav="recent">🕘<span>Recent</span></button><button data-nav="settings">⚙<span>Settings</span></button></nav>
 
-<script src="https://v.zencdn.net/8.23.4/video.min.js"></script>
-<script src="video.js"></script>
-</body>
-</html>
+<div id="modal" class="modal hidden"><div class="modal-card"><button id="closeModal" class="close">×</button><h2>Settings</h2>
+<label>Playlist URL<input id="playlistUrl"></label><label>Auto refresh (minutes)<input id="refreshMin" type="number" min="1" value="30"></label>
+<label class="check"><input id="autoplay" type="checkbox"> Last channel restore</label>
+<button id="saveSettings" class="save">Save settings</button><p class="hint">Changes are stored only in this browser.</p></div></div>
+<footer>IPTV INDIA · GitHub playlist</footer>
+<script src="https://v.zencdn.net/8.23.4/video.min.js"></script><script src="video.js"></script>
+</body></html>
