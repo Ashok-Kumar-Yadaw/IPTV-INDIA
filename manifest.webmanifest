@@ -1,0 +1,10 @@
+{
+  "name":"IPTV INDIA",
+  "short_name":"IPTV INDIA",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#080c11",
+  "theme_color":"#0b0f14",
+  "description":"Fast IPTV INDIA live TV player",
+  "icons":[]
+}
