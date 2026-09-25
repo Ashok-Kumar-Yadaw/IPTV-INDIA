@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="IPTV INDIA - Indian live TV playlist player">
+  <title>IPTV INDIA</title>
+  <link href="https://vjs.zencdn.net/8.23.4/video-js.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">📺</span>
+      <div>
+        <h1>IPTV INDIA</h1>
+        <small>Live TV Player</small>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button id="themeBtn" class="icon-btn" title="Dark/Light mode">☀️</button>
+      <button id="refreshBtn" class="icon-btn" title="Refresh playlist">↻</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="player-panel">
+      <video id="player" class="video-js vjs-big-play-centered" controls preload="auto"
+             playsinline></video>
+      <div id="nowPlaying" class="now-playing">किसी चैनल को चलाने के लिए नीचे से चुनें।</div>
+    </section>
+
+    <section class="toolbar">
+      <input id="searchInput" type="search" placeholder="🔎 चैनल खोजें..." autocomplete="off">
+      <div id="categoryBar" class="categories"></div>
+    </section>
+
+    <div class="status-row">
+      <span id="countLabel">Playlist लोड हो रही है…</span>
+      <span id="statusLabel"></span>
+    </div>
+
+    <section id="channelGrid" class="channel-grid"></section>
+  </main>
+
+  <footer>
+    <span>IPTV INDIA</span> · Playlist: GitHub <a href="https://github.com/Ashok-Kumar-Yadaw/IPTV-INDIA" target="_blank" rel="noopener">Ashok-Kumar-Yadaw/IPTV-INDIA</a>
+  </footer>
+
+  <script src="https://vjs.zencdn.net/8.23.4/video.min.js"></script>
+  <script src="video.js"></script>
+</body>
+</html>
