@@ -1,62 +1,53 @@
 <!doctype html>
 <html lang="hi">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#060a12"><link rel="manifest" href="manifest.webmanifest">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080d16">
+<title>IPTV INDIA Premium v10.2</title>
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="style.css">
-<link href="https://v.zencdn.net/8.23.4/video-js.css" rel="stylesheet">
-<title>IPTV INDIA • Premium v10</title>
 </head>
 <body>
-<div id="app">
 <header class="topbar">
-  <div class="brand"><div class="brandIcon">▶</div><div><b>IPTV INDIA</b><small>Premium TV v10.1</small></div></div>
-  <div class="topActions">
-    <button id="voice" title="Voice Search">🎙</button><button id="theme">☾</button><button id="install" class="hide">📲</button><button id="settings">⚙</button>
+  <div class="brand"><strong>▶ IPTV INDIA</strong><small>Premium v10.2</small></div>
+  <div class="actions">
+    <button id="themeBtn">☀</button>
+    <button id="refreshBtn">↻</button>
   </div>
 </header>
 
 <main>
-<section class="stage">
-  <div class="playerBox">
-    <video id="player" class="video-js vjs-big-play-centered" controls playsinline preload="metadata"></video>
-    <div id="liveBadge" class="liveBadge hide">● LIVE</div><div id="netBadge" class="netBadge">READY</div>
-  </div>
-  <div class="nowBar">
-    <div class="nowInfo"><img id="nowLogo" class="nowLogo" src="" alt=""><div><b id="nowTitle">Channel select करें</b><span id="nowMeta">Ready</span></div></div>
-    <div class="playerTools"><select id="quality"><option>Auto</option></select><button id="prev">◀</button><button id="next">▶</button><button id="pip">PiP</button><button id="full">⛶</button></div>
-  </div>
-</section>
+  <section class="player">
+    <div class="videoWrap">
+      <video id="video" controls playsinline preload="metadata"></video>
+      <div id="status" class="status">Loading…</div>
+    </div>
+    <div class="now">
+      <img id="nowLogo" alt="">
+      <div class="nowText"><b id="nowName">Channel select करें</b><span id="nowMeta">Playlist loading…</span></div>
+      <button id="prevBtn">◀</button><button id="nextBtn">▶</button><button id="fullBtn">⛶</button>
+    </div>
+  </section>
 
-<section class="heroTools">
-  <div class="searchBox"><span>⌕</span><input id="search" placeholder="Channel, number, language या category खोजें…"><button id="clearSearch">×</button></div>
-  <div class="chips">
-    <button data-view="all" class="chip active">All</button><button data-view="fav" class="chip">★ Favorites</button><button data-view="recent" class="chip">🕘 Recent</button>
-  </div>
-</section>
+  <section class="searchRow">
+    <input id="search" placeholder="Channel / category / language खोजें…">
+    <button id="clearBtn">×</button>
+  </section>
 
-<section class="dashboard">
-  <div class="dashCard"><span>CHANNELS</span><b id="total">0</b></div><div class="dashCard"><span>FAVORITES</span><b id="favCount">0</b></div>
-  <div class="dashCard"><span>WATCHED</span><b id="watchedCount">0</b></div><div class="dashCard"><span>NETWORK</span><b id="network">ONLINE</b></div>
-</section>
+  <section class="stats">
+    <div><small>CHANNELS</small><b id="total">0</b></div>
+    <div><small>FAVORITES</small><b id="favorites">0</b></div>
+    <div><small>STATUS</small><b id="loadStatus">Loading</b></div>
+  </section>
 
-<section class="toolbar">
-  <div class="sourceWrap"><select id="source"></select><button id="addSource">＋ Playlist</button><button id="refresh">↻</button></div>
-  <div class="toolbarBtns"><button id="guide">📅 Guide</button><button id="groups">📁 Groups</button><button id="diagnostics">🛠</button><button id="backup">💾</button></div>
-</section>
-
-<div id="categories" class="categories"></div>
-<section id="continueRow"></section><section id="favRow"></section><section id="groupRows"></section>
-
-<div class="listHead"><b id="listTitle">All Channels</b><span id="resultInfo">Loading…</span></div>
-<section id="grid" class="grid" tabindex="0"></section>
+  <section id="categories" class="categories"></section>
+  <div class="heading"><b id="heading">All Channels</b><span id="count"></span></div>
+  <section id="grid" class="grid"></section>
 </main>
 
-<nav class="bottomNav"><button data-action="home">⌂<span>Home</span></button><button data-action="live">▶<span>Live</span></button><button data-action="fav">★<span>Favorites</span></button><button data-action="guide">📅<span>Guide</span></button><button data-action="settings">⚙<span>Settings</span></button></nav>
+<div id="errorBox" class="error hide"></div>
 
-<div id="modal" class="modal hide"><div class="dialog"><button id="closeModal" class="close">×</button><div id="modalBody"></div></div></div>
-<footer>IPTV INDIA Premium v10.1 • Client-side player • Provider stream restrictions still apply</footer>
-</div>
-<script src="https://v.zencdn.net/8.23.4/video.min.js"></script>
 <script src="video.js"></script>
-</body></html>
+</body>
+</html>

@@ -1,45 +1,143 @@
-const LOCAL_PLAYLIST="./in.m3u";
-const REMOTE_PLAYLIST="https://raw.githubusercontent.com/Ashok-Kumar-Yadaw/IPTV-INDIA/main/in.m3u";
-const DEFAULT=LOCAL_PLAYLIST;
-const K={src:"v10-src",cache:"v10-cache",fav:"v10-fav",recent:"v10-recent",plays:"v10-plays",theme:"v10-theme",refresh:"v10-refresh",groups:"v10-groups",epg:"v10-epg"};
-const $=id=>document.getElementById(id),read=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-let sources=read(K.src,[{name:"IPTV INDIA",url:DEFAULT}]),active=0,favs=new Set(read(K.fav,[])),recent=read(K.recent,[]),plays=read(K.plays,[]),groups=read(K.groups,[]);
-let S={channels:[],filtered:[],cat:"All",view:"all",q:"",current:null,rendered:0};
-const player=videojs("player",{controls:true,responsive:true,fluid:true,liveui:true,preload:"metadata",html5:{vhs:{overrideNative:true,enableLowInitialPlaylist:true,limitRenditionByPlayerDimensions:true}}});
-const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-function parse(t){let a=t.replace(/\r/g,"").split("\n"),o=[],n=0;for(let i=0;i<a.length;i++){let l=a[i].trim();if(!l.startsWith("#EXTINF"))continue;let m={},x,r=/([A-Za-z0-9_-]+)="([^"]*)"/g;while(x=r.exec(l))m[x[1]]=x[2];let c=l.indexOf(","),name=(c>=0?l.slice(c+1).trim():m["tvg-name"])||"Unknown",url="";for(let j=i+1;j<a.length;j++){let z=a[j].trim();if(!z||z[0]==="#")continue;url=z;i=j;break}if(url)o.push({num:++n,name,group:m["group-title"]||"Other",logo:m["tvg-logo"]||"",id:m["tvg-id"]||"",url,lang:m["tvg-language"]||"",epg:m["tvg-id"]||""})}return o}
-function category(c){let s=(c.group+" "+c.name).toLowerCase();if(/news|न्यूज़|समाचार/.test(s))return"News";if(/movie|film|cinema|मूवी|फिल्म/.test(s))return"Movies";if(/music|म्यूजिक|संगीत/.test(s))return"Music";if(/sport|खेल/.test(s))return"Sports";if(/kids|cartoon|बच्च/.test(s))return"Kids";if(/bhakti|devotional|spiritual|भक्ति|धार्मिक/.test(s))return"Devotional";if(/entertainment|मनोरंजन/.test(s))return"Entertainment";return c.group||"Other"}
-function sourceUI(){$("source").innerHTML=sources.map((s,i)=>`<option value="${i}" ${i===active?"selected":""}>${esc(s.name)}</option>`).join("")}
-function renderCats(){let counts={};S.channels.forEach(c=>counts[category(c)]=(counts[category(c)]||0)+1);$("categories").innerHTML=["All",...Object.keys(counts).sort()].map(x=>`<button class="cat ${S.cat===x?"active":""}" data-cat="${esc(x)}">${esc(x)}${x==="All"?"":` (${counts[x]})`}</button>`).join("");document.querySelectorAll(".cat").forEach(b=>b.onclick=()=>{S.cat=b.dataset.cat;renderCats();apply()})}
-function apply(){let q=S.q.toLowerCase().trim();S.filtered=S.channels.filter(c=>(S.cat==="All"||category(c)===S.cat)&&(!q||(c.name+" "+c.group+" "+c.lang+" "+c.num).toLowerCase().includes(q))&&(S.view==="all"||S.view==="fav"&&favs.has(c.id||c.url)||S.view==="recent"&&recent.includes(c.url)));$("listTitle").textContent=S.view==="fav"?"★ Favorites":S.view==="recent"?"🕘 Recently Watched":S.cat==="All"?"All Channels":S.cat;$("resultInfo").textContent=`${S.filtered.length} / ${S.channels.length}`;$("grid").innerHTML="";S.rendered=0;if(!S.filtered.length){$("grid").innerHTML='<div class="empty">कोई channel नहीं मिला।</div>';return}requestAnimationFrame(renderMore)}
-function makeCard(c,mini=false){let key=c.id||c.url,d=document.createElement("article");d.className=mini?"mini card":"card";d.tabIndex=0;d.innerHTML=`<div class="ct"><img class="logo" loading="lazy" src="${esc(c.logo)}" onerror="this.removeAttribute('src')"><div class="nm">${esc(c.num)}. ${esc(c.name)}</div>${mini?"":`<button class="star">${favs.has(key)?"★":"☆"}</button>`}</div><div class="meta">${esc(category(c))} · ${esc(c.group)}${c.lang?" · "+esc(c.lang):""}</div>`;let act=e=>{if(e.target.closest(".star")){e.stopPropagation();favs.has(key)?favs.delete(key):favs.add(key);save(K.fav,[...favs]);refreshStats();renderRows();apply();return}play(c)};d.onclick=act;d.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();act(e)}};return d}
-function renderMore(){let end=Math.min(S.rendered+80,S.filtered.length),f=document.createDocumentFragment();for(;S.rendered<end;S.rendered++)f.appendChild(makeCard(S.filtered[S.rendered]));$("grid").appendChild(f);if(S.rendered<S.filtered.length)requestAnimationFrame(renderMore)}
-function row(title,list,parent){if(!list.length)return;let s=document.createElement("section");s.innerHTML=`<div class="rowTitle"><b>${title}</b><span>${list.length}</span></div><div class="row"></div>`;$(parent).appendChild(s);list.slice(0,15).forEach(c=>s.querySelector(".row").appendChild(makeCard(c,true)))}
-function renderRows(){["continueRow","favRow","groupRows"].forEach(x=>$(x).innerHTML="");row("Continue Watching",recent.map(u=>S.channels.find(c=>c.url===u)).filter(Boolean),"continueRow");row("★ Favorites",S.channels.filter(c=>favs.has(c.id||c.url)),"favRow");groups.slice(0,5).forEach(g=>row("📁 "+g.name,S.channels.filter(c=>g.urls.includes(c.url)),"groupRows"))}
-function refreshStats(){$("total").textContent=S.channels.length;$("favCount").textContent=favs.size;$("watchedCount").textContent=plays.length;$("network").textContent=navigator.onLine?"ONLINE":"OFFLINE"}
-function play(c){S.current=c;$("nowTitle").textContent="▶ "+c.name;$("nowMeta").textContent=`${category(c)} · ${c.group}${c.lang?" · "+c.lang:""}`;$("nowLogo").src=c.logo||"";$("liveBadge").classList.remove("hide");$("netBadge").textContent="CONNECTING";recent=[c.url,...recent.filter(x=>x!==c.url)].slice(0,60);plays=[...new Set([c.url,...plays])].slice(0,1000);save(K.recent,recent);save(K.plays,plays);player.src({src:c.url,type:/\.m3u8($|\?)/i.test(c.url)?"application/x-mpegURL":"video/mp4"});player.play().catch(()=>{});setTimeout(qualityUI,600);refreshStats();renderRows()}
-function nav(d){let a=S.filtered,i=a.findIndex(c=>c.url===S.current?.url),n=a[(Math.max(i,0)+d+a.length)%a.length];if(n)play(n)}
-function qualityUI(){let q=player.qualityLevels?.();if(!q||!q.length)return;$("quality").innerHTML='<option value="auto">Auto</option>'+[...q].map((x,i)=>`<option value="${i}">${x.height?x.height+"p":x.width||"Quality"}</option>`).join("")}
-$("quality").onchange=e=>{let q=player.qualityLevels?.();if(!q)return;for(let i=0;i<q.length;i++)q[i].enabled(e.target.value==="auto"||String(i)===e.target.value)};
-player.on("loadedmetadata",qualityUI);player.on("playing",()=>{$("netBadge").textContent="PLAYING";$("netBadge").style.color="#a8ffca"});player.on("waiting",()=>{$("netBadge").textContent="BUFFERING";$("netBadge").style.color="#ffd166"});player.on("error",()=>{$("netBadge").textContent="RETRYING";$("netBadge").style.color="#ff8d8d";setTimeout(()=>player.play().catch(()=>{}),1600)});
-$("prev").onclick=()=>nav(-1);$("next").onclick=()=>nav(1);$("pip").onclick=()=>player.requestPictureInPicture?.().catch(()=>{});$("full").onclick=()=>player.requestFullscreen?.();
-function modal(h){$("modalBody").innerHTML=h;$("modal").classList.remove("hide")}function closeModal(){$("modal").classList.add("hide")}$("closeModal").onclick=closeModal;
-async function fetchPlaylist(url){let r=await fetch(url+(url.includes("?")?"&":"?")+"t="+Date.now(),{cache:"no-store",credentials:"omit"});if(!r.ok)throw Error("HTTP "+r.status);let text=await r.text();if(!/^\s*#EXTM3U/i.test(text))throw Error("Not an M3U playlist");let a=parse(text);if(!a.length)throw Error("No channels found");return a}
-async function load(force=false){let source=sources[active]?.url||LOCAL_PLAYLIST,cache=read(K.cache,{});if(!force&&cache[source]?.channels?.length){S.channels=cache[source].channels;renderCats();apply();renderRows();refreshStats();$("resultInfo").textContent=`Cached · ${S.channels.length}`;setTimeout(()=>load(true),900);return}let st=performance.now();$("resultInfo").textContent="Loading playlist…";let attempts=[];if(source===LOCAL_PLAYLIST)attempts=[LOCAL_PLAYLIST,REMOTE_PLAYLIST];else attempts=[source];let lastErr=null;for(const url of attempts){try{let a=await fetchPlaylist(url);S.channels=a;cache[source]={time:Date.now(),channels:a};save(K.cache,cache);renderCats();apply();renderRows();refreshStats();$("resultInfo").textContent=`${a.length} channels · ${Math.round(performance.now()-st)}ms`;return}catch(e){lastErr=e}}$("resultInfo").textContent="Playlist load failed";if(!S.channels.length)$("grid").innerHTML=`<div class="empty"><b>Playlist load नहीं हो सकी।</b><br><br>GitHub Pages में <code>in.m3u</code> को repository के root में रखें।<br>अगर remote URL इस्तेमाल कर रहे हैं तो CORS enabled होना चाहिए।<br><br><small>${esc(lastErr?.message||"Unknown error")}</small></div>`}
-function guide(){let epg=localStorage.getItem(K.epg)||"";modal(`<h2>📅 TV Guide / EPG</h2><p class="hint">XMLTV URL यहाँ save करें। Browser में EPG source को CORS access देना आवश्यक हो सकता है।</p><label>XMLTV URL<input id="epgUrl" value="${esc(epg)}" placeholder="https://example.com/guide.xml"></label><button id="saveEpg" class="primary">Save EPG URL</button><h3>Channel mapping</h3><table><tr><th>#</th><th>Channel</th><th>EPG ID</th></tr>${S.channels.slice(0,200).map(c=>`<tr><td>${c.num}</td><td>${esc(c.name)}</td><td>${esc(c.epg||"—")}</td></tr>`).join("")}</table>`);$("saveEpg").onclick=()=>{localStorage.setItem(K.epg,$("epgUrl").value.trim());closeModal()}}
-function diagnostics(){modal(`<h2>🛠 Diagnostics</h2><div class="metrics"><div><b>${S.channels.length}</b><small>Channels</small></div><div><b>${favs.size}</b><small>Favorites</small></div><div><b>${plays.length}</b><small>Watched</small></div><div><b>${navigator.onLine?"Online":"Offline"}</b><small>Network</small></div></div><p class="hint">Stream availability can depend on CORS, authentication, DRM, geo restrictions and the provider.</p><table><tr><td>Current</td><td>${esc(S.current?.name||"—")}</td></tr><tr><td>Player readyState</td><td>${player.readyState()}</td></tr><tr><td>Playlist</td><td>${esc(sources[active]?.url||"—")}</td></tr></table>`)}
-function groupsUI(){modal(`<h2>📁 Custom Groups</h2><label>Group name<input id="groupName" placeholder="My News"></label><button id="makeGroup" class="primary">Create from current filter</button><table><tr><th>Group</th><th>Channels</th></tr>${groups.map(g=>`<tr><td>${esc(g.name)}</td><td>${g.urls.length}</td></tr>`).join("")||"<tr><td colspan=2>No groups yet</td></tr>"}</table>`);$("makeGroup").onclick=()=>{let n=$("groupName").value.trim();if(!n)return alert("Group name required");groups.push({name:n,urls:S.filtered.map(c=>c.url)});save(K.groups,groups);closeModal();renderRows()}}
-function settings(){modal(`<h2>⚙ Settings</h2><label>Auto refresh minutes<input id="refreshMin" type="number" min="1" value="${localStorage.getItem(K.refresh)||30}"></label><button id="saveSettings" class="primary">Save</button><button id="exportBtn" class="secondary">Export Backup</button><label>Restore backup<input id="restore" type="file" accept=".json"></label>`);$("saveSettings").onclick=()=>{localStorage.setItem(K.refresh,$("refreshMin").value||30);closeModal()};$("exportBtn").onclick=backup;$("restore").onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(x.sources)save(K.src,x.sources);if(x.favorites)save(K.fav,x.favorites);if(x.recent)save(K.recent,x.recent);if(x.groups)save(K.groups,x.groups);if(x.epg)localStorage.setItem(K.epg,x.epg);if(x.theme)localStorage.setItem(K.theme,x.theme);location.reload()}catch{alert("Invalid backup")}};r.readAsText(f)}}
-function addSource(){modal(`<h2>＋ Add Playlist</h2><label>Name<input id="sn" placeholder="My Playlist"></label><label>M3U URL<input id="su" placeholder="https://example.com/list.m3u"></label><button id="addNow" class="primary">Add</button>`);$("addNow").onclick=()=>{let n=$("sn").value.trim()||"Playlist "+(sources.length+1),u=$("su").value.trim();if(!u)return alert("URL required");sources.push({name:n,url:u});save(K.src,sources);active=sources.length-1;sourceUI();closeModal();load(true)}}
-function backup(){let d={version:10,sources,favorites:[...favs],recent,plays,groups,epg:localStorage.getItem(K.epg)||"",theme:localStorage.getItem(K.theme)||"dark",exported:new Date().toISOString()};let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:"application/json"}));a.download="iptv-india-v10-backup.json";a.click()}
-$("source").onchange=e=>{active=+e.target.value;S.channels=[];load(false)};$("addSource").onclick=addSource;$("refresh").onclick=()=>load(true);$("search").oninput=e=>{clearTimeout(window.searchTimer);window.searchTimer=setTimeout(()=>{S.q=e.target.value;apply()},70)};$("clearSearch").onclick=()=>{$("search").value="";S.q="";apply()};
-document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));b.classList.add("active");S.view=b.dataset.view;apply()});
-$("guide").onclick=guide;$("groups").onclick=groupsUI;$("diagnostics").onclick=diagnostics;$("backup").onclick=backup;$("settings").onclick=settings;
-function theme(t){document.documentElement.dataset.theme=t;localStorage.setItem(K.theme,t);$("theme").textContent=t==="dark"?"☀":"☾"}theme(localStorage.getItem(K.theme)||"dark");$("theme").onclick=()=>theme(document.documentElement.dataset.theme==="dark"?"light":"dark");
-$("voice").onclick=()=>{let R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return alert("इस browser में voice search उपलब्ध नहीं है।");let r=new R();r.lang="hi-IN";r.onresult=e=>{$("search").value=e.results[0][0].transcript;S.q=$("search").value;apply()};r.start()};
-document.querySelectorAll(".bottomNav button").forEach(b=>b.onclick=()=>{let a=b.dataset.action;if(a==="settings")settings();else if(a==="guide")guide();else if(a==="fav"){S.view="fav";document.querySelector('[data-view="fav"]').click()}else if(a==="live"){S.view="all";document.querySelector('[data-view="all"]').click()}else scrollTo({top:0,behavior:"smooth"})});
-document.addEventListener("keydown",e=>{if(["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName))return;if(e.key==="ArrowUp"){e.preventDefault();nav(-1)}if(e.key==="ArrowDown"){e.preventDefault();nav(1)}if(e.key==="ArrowLeft")$("prev").click();if(e.key==="ArrowRight")$("next").click();if(e.key==="Enter"&&document.activeElement?.classList.contains("card"))document.activeElement.click();if(e.key==="Escape")closeModal();if(e.key.toLowerCase()==="m")player.muted(!player.muted())});
-let dp;addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e;$("install").classList.remove("hide")});$("install").onclick=async()=>{await dp?.prompt();dp=null;$("install").classList.add("hide")};
-if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(console.warn));
-addEventListener("online",refreshStats);addEventListener("offline",refreshStats);
-sourceUI();load();setInterval(()=>load(true),Number(localStorage.getItem(K.refresh)||30)*60000);
+/* IPTV INDIA v10.2 - no hard dependency on Video.js.
+   The page can load the playlist even if a player CDN is unavailable. */
+const LOCAL="./in.m3u";
+const REMOTE="https://raw.githubusercontent.com/Ashok-Kumar-Yadaw/IPTV-INDIA/main/in.m3u";
+const $=id=>document.getElementById(id);
+const KEY={fav:"iptv-fav-v102",theme:"iptv-theme-v102",cache:"iptv-cache-v102"};
+let channels=[],filtered=[],favorites=new Set(JSON.parse(localStorage.getItem(KEY.fav)||"[]")),category="All",query="",current=-1;
+const video=$("video");
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function setStatus(t,good=false){$("status").textContent=t;$("status").style.color=good?"#b7ffc9":"#ffd166";}
+function parseM3U(text){
+  const lines=text.replace(/^\uFEFF/,"").replace(/\r/g,"").split("\n");
+  const out=[];
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i].trim();
+    if(!line.startsWith("#EXTINF")) continue;
+    const attrs={}; const re=/([A-Za-z0-9_-]+)="([^"]*)"/g; let m;
+    while((m=re.exec(line))) attrs[m[1]]=m[2];
+    const comma=line.indexOf(",");
+    const name=(comma>=0?line.slice(comma+1).trim():attrs["tvg-name"])||"Unknown";
+    let url="";
+    for(let j=i+1;j<lines.length;j++){
+      const x=lines[j].trim();
+      if(!x||x.startsWith("#")) continue;
+      url=x;i=j;break;
+    }
+    if(url) out.push({num:out.length+1,name,group:attrs["group-title"]||"Other",logo:attrs["tvg-logo"]||"",lang:attrs["tvg-language"]||"",id:attrs["tvg-id"]||"",url});
+  }
+  return out;
+}
+function cat(c){
+  const s=(c.group+" "+c.name).toLowerCase();
+  if(/news|न्यूज़|समाचार/.test(s)) return "News";
+  if(/movie|film|cinema|मूवी|फिल्म/.test(s)) return "Movies";
+  if(/music|म्यूजिक|संगीत/.test(s)) return "Music";
+  if(/sport|खेल/.test(s)) return "Sports";
+  if(/kids|cartoon|बच्च/.test(s)) return "Kids";
+  if(/bhakti|devotional|spiritual|भक्ति|धार्मिक/.test(s)) return "Devotional";
+  return c.group||"Other";
+}
+function renderCategories(){
+  const counts={}; channels.forEach(c=>counts[cat(c)]=(counts[cat(c)]||0)+1);
+  $("categories").innerHTML=["All",...Object.keys(counts).sort()].map(x=>`<button class="cat ${x===category?"active":""}" data-cat="${esc(x)}">${esc(x)}${x==="All"?"":` (${counts[x]})`}</button>`).join("");
+  document.querySelectorAll(".cat").forEach(b=>b.onclick=()=>{category=b.dataset.cat;renderCategories();apply()});
+}
+function apply(){
+  const q=query.toLowerCase().trim();
+  filtered=channels.filter(c=>(category==="All"||cat(c)===category)&&(!q||(c.name+" "+c.group+" "+c.lang+" "+c.num).toLowerCase().includes(q)));
+  $("heading").textContent=category==="All"?"All Channels":category;
+  $("count").textContent=`${filtered.length} / ${channels.length}`;
+  $("grid").innerHTML="";
+  if(!filtered.length){$("grid").innerHTML='<div class="empty">कोई channel नहीं मिला।</div>';return}
+  let i=0;
+  const batch=()=>{const f=document.createDocumentFragment();for(let n=0;n<70&&i<filtered.length;n++,i++)f.appendChild(card(filtered[i]));$("grid").appendChild(f);if(i<filtered.length)requestAnimationFrame(batch)};
+  requestAnimationFrame(batch);
+}
+function card(c){
+  const key=c.id||c.url,d=document.createElement("article");d.className="card";d.tabIndex=0;
+  d.innerHTML=`<div class="ct"><img class="logo" loading="lazy" src="${esc(c.logo)}" onerror="this.style.visibility='hidden'"><div class="name">${esc(c.num)}. ${esc(c.name)}</div><button class="star">${favorites.has(key)?"★":"☆"}</button></div><div class="meta">${esc(cat(c))} · ${esc(c.group)}${c.lang?" · "+esc(c.lang):""}</div>`;
+  const open=()=>play(c);
+  d.onclick=e=>{if(e.target.closest(".star")){e.stopPropagation();favorites.has(key)?favorites.delete(key):favorites.add(key);localStorage.setItem(KEY.fav,JSON.stringify([...favorites]));$("favorites").textContent=favorites.size;apply();return}open()};
+  d.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open()}};
+  return d;
+}
+function play(c){
+  current=filtered.findIndex(x=>x.url===c.url);
+  $("nowName").textContent="▶ "+c.name;$("nowMeta").textContent=`${cat(c)} · ${c.group}${c.lang?" · "+c.lang:""}`;
+  $("nowLogo").src=c.logo||"";setStatus("CONNECTING");
+  const isHls=/\.m3u8($|\?)/i.test(c.url);
+  video.pause();video.removeAttribute("src");video.load();
+  if(video.canPlayType(isHls?"application/vnd.apple.mpegurl":"video/mp4")){
+    video.src=c.url;video.play().catch(()=>{});
+  }else if(isHls){
+    loadHls(c.url);
+  }else{
+    video.src=c.url;video.play().catch(()=>{});
+  }
+}
+let hlsScript=null;
+function loadHls(url){
+  if(window.Hls){startHls(url);return}
+  if(hlsScript)return;
+  hlsScript=document.createElement("script");
+  hlsScript.src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js";
+  hlsScript.onload=()=>startHls(url);
+  hlsScript.onerror=()=>showError("HLS player library load नहीं हुई। Internet/CDN access check करें।");
+  document.head.appendChild(hlsScript);
+}
+let hls=null;
+function startHls(url){
+  if(!window.Hls){showError("HLS support उपलब्ध नहीं है।");return}
+  if(hls){hls.destroy();hls=null}
+  hls=new Hls({enableWorker:true,lowLatencyMode:false,backBufferLength:30});
+  hls.loadSource(url);hls.attachMedia(video);
+  hls.on(Hls.Events.MANIFEST_PARSED,()=>{setStatus("PLAYING",true);video.play().catch(()=>{})});
+  hls.on(Hls.Events.ERROR,(e,d)=>{if(d.fatal){setStatus("ERROR");showError("Stream error: "+(d.details||"fatal HLS error"))}});
+}
+video.addEventListener("playing",()=>setStatus("PLAYING",true));
+video.addEventListener("waiting",()=>setStatus("BUFFERING"));
+video.addEventListener("error",()=>{if(video.error)setStatus("ERROR")});
+function showError(msg){$("errorBox").innerHTML=esc(msg);$("errorBox").classList.remove("hide")}
+function hideError(){$("errorBox").classList.add("hide")}
+async function getText(url){
+  const r=await fetch(url+(url.includes("?")?"&":"?")+"v="+Date.now(),{cache:"no-store",mode:"cors"});
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  const t=await r.text();
+  if(!/^\s*#EXTM3U/i.test(t))throw new Error("यह valid M3U file नहीं है");
+  return t;
+}
+async function load(){
+  hideError();$("loadStatus").textContent="Loading";setStatus("LOADING");
+  const cached=JSON.parse(localStorage.getItem(KEY.cache)||"null");
+  if(cached?.length){channels=cached;finishLoad();setTimeout(loadNetwork,700);return}
+  await loadNetwork();
+}
+async function loadNetwork(){
+  try{
+    let text;
+    try{text=await getText(LOCAL)}
+    catch(localErr){text=await getText(REMOTE)}
+    const data=parseM3U(text);
+    if(!data.length)throw new Error("M3U में कोई channel नहीं मिला");
+    channels=data;localStorage.setItem(KEY.cache,JSON.stringify(data));finishLoad();
+  }catch(e){
+    $("loadStatus").textContent="ERROR";setStatus("ERROR");
+    showError(`Playlist load नहीं हुई: ${e.message}. GitHub repository के root में in.m3u रखें और filename बिल्कुल in.m3u रखें.`);
+  }
+}
+function finishLoad(){
+  $("total").textContent=channels.length;$("favorites").textContent=favorites.size;$("loadStatus").textContent="READY";
+  setStatus("READY",true);renderCategories();apply();
+}
+$("search").oninput=e=>{query=e.target.value;clearTimeout(window.t);window.t=setTimeout(apply,80)};
+$("clearBtn").onclick=()=>{$("search").value="";query="";apply()};
+$("refreshBtn").onclick=()=>{localStorage.removeItem(KEY.cache);load()};
+$("themeBtn").onclick=()=>{const t=document.documentElement.dataset.theme==="light"?"dark":"light";document.documentElement.dataset.theme=t;localStorage.setItem(KEY.theme,t)};
+$("prevBtn").onclick=()=>{if(filtered.length)play(filtered[(current-1+filtered.length)%filtered.length])};
+$("nextBtn").onclick=()=>{if(filtered.length)play(filtered[(current+1)%filtered.length])};
+$("fullBtn").onclick=()=>{if(video.requestFullscreen)video.requestFullscreen();else video.webkitEnterFullscreen?.()};
+document.addEventListener("keydown",e=>{if(["INPUT","TEXTAREA"].includes(document.activeElement.tagName))return;if(e.key==="ArrowLeft")$("prevBtn").click();if(e.key==="ArrowRight")$("nextBtn").click();if(e.key==="ArrowUp"||e.key==="ArrowDown"){$("nextBtn").click();}});
+document.documentElement.dataset.theme=localStorage.getItem(KEY.theme)||"dark";
+load();
