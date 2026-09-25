@@ -1,24 +1,24 @@
-# IPTV INDIA Web Player v7
+# IPTV INDIA Web Player v8
 
-Features:
-- Smart-TV style dashboard
-- Continue Watching / My Channels / Now & Next interface
-- Previous/Next channel navigation
-- Keyboard controls: Arrow Up/Down, F fullscreen, M mute
+Major upgrades:
+- Faster rendering with batched/virtualized channel cards
+- Smart TV / Android TV style home rows
+- Continue Watching, Favorites, Custom Groups, Now & Next shell
+- HLS quality selector when the source exposes multiple renditions
+- Player reconnect feedback
 - Multiple M3U playlists
-- Category and channel-number search
-- EPG/XMLTV URL configuration shell
-- Reminders/notifications UI
-- Playlist cleaner + M3U export
-- Favorites, recent history and local statistics
-- Backup/restore
-- HLS playback via Video.js
-- Cached playlist and background refresh
+- Category + channel-number + language search
+- EPG/XMLTV configuration shell
+- Local reminders/notifications UI
+- Diagnostics page
+- Statistics and backup/restore
 - Dark/light mode
-- PWA install support
+- PWA install
+- Keyboard/D-pad navigation
+- Local playlist cache and background refresh
 
-Default playlist:
+Default M3U:
 https://raw.githubusercontent.com/Ashok-Kumar-Yadaw/IPTV-INDIA/main/in.m3u
 
-Notes:
-Real EPG programme times require a valid XMLTV source and CORS access. Browser-side remote stream health checks can be restricted by CORS, DRM, geo-blocking, or provider policies. This project does not bypass those restrictions.
+Important:
+Actual EPG programme data requires a valid XMLTV source and browser CORS access. Stream availability can be affected by CORS, DRM, authentication and geo restrictions. This project does not bypass those restrictions.
