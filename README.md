@@ -1,23 +1,26 @@
-# IPTV INDIA Web Player v3
+# IPTV INDIA Web Player v4
 
-Features:
-- Modern dashboard-style IPTV UI
-- Cached startup + background playlist refresh
-- Dynamic categories and counts
-- Search by channel/category/language
-- Favorites + Recently watched
-- A-Z sorting
-- Auto reconnect attempt
-- HLS/Video.js live playback
-- PiP + Fullscreen
-- Dark/Light mode
-- PWA install + service-worker shell cache
-- Settings panel: custom playlist URL, refresh interval, last-channel preference
-- Mobile bottom navigation
-- Chunked rendering and lazy logos for large playlists
+New:
+- TV Guide shell and EPG-ready metadata view
+- Channel Health dashboard (browser-safe status limitation explained)
+- Playlist statistics
+- HLS quality representation selector when exposed by the stream
+- Smart player status/buffering/live indicators
+- Cached playlist + background refresh
+- Search, categories, favorites, recent, A-Z
+- Responsive modern dashboard
+- Dark/light mode
+- PWA install + service worker
+- Settings for custom playlist URL and refresh interval
+- Mobile navigation
 
 Default playlist:
 https://raw.githubusercontent.com/Ashok-Kumar-Yadaw/IPTV-INDIA/main/in.m3u
 
-Use a web server (localhost/HTTPS) rather than file:// for PWA/service-worker features.
-Browser playback cannot bypass CORS, DRM, geo-blocking, expired links, or incompatible codecs.
+Run via localhost/HTTPS for PWA/service-worker features.
+
+Important:
+A browser cannot reliably probe arbitrary remote streams because of CORS, DRM, geo-blocking and server restrictions. The Health screen therefore does not claim that untested streams are online/offline. Actual stream playback status comes from Video.js.
+
+EPG:
+To show real program schedules, an XMLTV/EPG source is required. The current build provides an EPG-ready UI but does not invent program data.
