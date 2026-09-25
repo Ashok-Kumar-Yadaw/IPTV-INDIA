@@ -2,52 +2,70 @@
 <html lang="hi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#080d16">
-<title>IPTV INDIA Premium v10.2</title>
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070b12">
+<title>IPTV INDIA — v11</title>
+<style>
+:root{--bg:#070b12;--p:#101722;--p2:#182333;--t:#f5f7fb;--m:#91a0b2;--l:#2a394c;--a:#e53935;--ok:#56d98a;--bad:#ff6978}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:14px system-ui,Segoe UI,Arial}.bar{position:sticky;top:0;z-index:9;background:#0b111bcc;backdrop-filter:blur(14px);border-bottom:1px solid var(--l);padding:10px 14px;display:flex;align-items:center;justify-content:space-between}.brand b,.brand small{display:block}.brand small{color:var(--m);font-size:10px}.actions{display:flex;gap:6px}button,input,select{font:inherit}button{border:1px solid var(--l);background:var(--p2);color:var(--t);border-radius:9px;padding:8px 10px;cursor:pointer}button:hover{border-color:#58708c}main{max-width:1450px;margin:auto;padding:12px}.player{background:#000;border:1px solid var(--l);border-radius:16px;overflow:hidden}.screen{position:relative}.screen video{display:block;width:100%;height:min(62vh,680px);background:#000}.badge{position:absolute;right:10px;top:10px;background:#000b;border-radius:20px;padding:5px 9px;font-size:11px}.now{display:flex;gap:9px;align-items:center;padding:9px;background:#090d12}.now img{width:44px;height:44px;object-fit:contain;background:#151c25;border-radius:8px}.now div{flex:1;min-width:0}.now b,.now span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.now span{color:var(--m);font-size:11px;margin-top:2px}.search{display:flex;margin:12px 0}.search input{flex:1;min-width:0;background:var(--p);color:var(--t);border:1px solid var(--l);border-radius:10px 0 0 10px;padding:12px;outline:0}.search button{border-radius:0 10px 10px 0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stats div{background:var(--p);border:1px solid var(--l);border-radius:11px;padding:10px}.stats small{display:block;color:var(--m);font-size:9px}.stats b{font-size:18px}.cats{display:flex;gap:6px;overflow:auto;padding:12px 0}.cat.active{background:var(--a);border-color:var(--a)}.head{display:flex;justify-content:space-between;margin-bottom:8px}.head span{color:var(--m);font-size:11px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:9px}.card{background:var(--p);border:1px solid var(--l);border-radius:12px;padding:9px;cursor:pointer}.card:focus,button:focus,input:focus{outline:3px solid #58a6ff;outline-offset:2px}.ct{display:flex;align-items:center;gap:8px}.logo{width:47px;height:47px;object-fit:contain;background:var(--p2);border-radius:8px}.name{font-weight:700;flex:1}.star{background:transparent;border:0;color:#ffc107;font-size:20px;padding:0}.meta{color:var(--m);font-size:10px;margin-top:5px}.msg{margin:12px 0;padding:13px;border-radius:11px;border:1px solid var(--l);background:var(--p)}.msg.bad{border-color:#71313a;color:#ffdfe2}.msg.ok{border-color:#275f43;color:#d8ffe8}.small{color:var(--m);font-size:12px}.hide{display:none}.empty{text-align:center;padding:45px;color:var(--m)}
+@media(max-width:650px){main{padding:7px}.screen video{height:42vh}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.logo{width:42px;height:42px}.name{font-size:12px}.now button{padding:7px}.stats{grid-template-columns:repeat(3,1fr)}}
+</style>
 </head>
 <body>
-<header class="topbar">
-  <div class="brand"><strong>▶ IPTV INDIA</strong><small>Premium v10.2</small></div>
-  <div class="actions">
-    <button id="themeBtn">☀</button>
-    <button id="refreshBtn">↻</button>
-  </div>
-</header>
-
+<header class="bar"><div class="brand"><b>▶ IPTV INDIA</b><small>Premium v11 • GitHub Pages Repair</small></div><div class="actions"><button id="theme">☀</button><button id="reload">↻ Reload</button></div></header>
 <main>
-  <section class="player">
-    <div class="videoWrap">
-      <video id="video" controls playsinline preload="metadata"></video>
-      <div id="status" class="status">Loading…</div>
-    </div>
-    <div class="now">
-      <img id="nowLogo" alt="">
-      <div class="nowText"><b id="nowName">Channel select करें</b><span id="nowMeta">Playlist loading…</span></div>
-      <button id="prevBtn">◀</button><button id="nextBtn">▶</button><button id="fullBtn">⛶</button>
-    </div>
-  </section>
-
-  <section class="searchRow">
-    <input id="search" placeholder="Channel / category / language खोजें…">
-    <button id="clearBtn">×</button>
-  </section>
-
-  <section class="stats">
-    <div><small>CHANNELS</small><b id="total">0</b></div>
-    <div><small>FAVORITES</small><b id="favorites">0</b></div>
-    <div><small>STATUS</small><b id="loadStatus">Loading</b></div>
-  </section>
-
-  <section id="categories" class="categories"></section>
-  <div class="heading"><b id="heading">All Channels</b><span id="count"></span></div>
-  <section id="grid" class="grid"></section>
+<section class="player"><div class="screen"><video id="video" controls playsinline preload="metadata"></video><span id="badge" class="badge">STARTING</span></div><div class="now"><img id="logo" alt=""><div><b id="title">Channel select करें</b><span id="meta">Playlist loading…</span></div><button id="prev">◀</button><button id="next">▶</button><button id="fs">⛶</button></div></section>
+<div id="message" class="msg">Playlist check हो रही है…</div>
+<div class="search"><input id="q" placeholder="Channel / category / language खोजें"><button id="clear">×</button></div>
+<section class="stats"><div><small>CHANNELS</small><b id="total">0</b></div><div><small>FAVORITES</small><b id="fav">0</b></div><div><small>LOAD</small><b id="load">—</b></div></section>
+<div id="cats" class="cats"></div>
+<div class="head"><b id="head">All Channels</b><span id="count">0</span></div>
+<section id="grid" class="grid"></section>
 </main>
-
-<div id="errorBox" class="error hide"></div>
-
-<script src="video.js"></script>
+<script>
+(()=>{"use strict";
+const $=id=>document.getElementById(id);
+const LOCAL="./in.m3u";
+const PAGES="./in.m3u";
+const RAW="https://raw.githubusercontent.com/Ashok-Kumar-Yadaw/IPTV-INDIA/main/in.m3u";
+const API="https://api.github.com/repos/Ashok-Kumar-Yadaw/IPTV-INDIA/contents/in.m3u?ref=main";
+let channels=[],filtered=[],catSel="All",query="",cur=-1,hls=null;
+let favs=new Set(JSON.parse(localStorage.getItem("iptv-v11-fav")||"[]"));
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function message(s,type=""){ $("message").className="msg "+type; $("message").innerHTML=s }
+function badge(s){$("badge").textContent=s}
+function parse(t){
+ const lines=t.replace(/^\\uFEFF/,"").replace(/\\r/g,"").split("\\n"),out=[];
+ for(let i=0;i<lines.length;i++){
+  let l=lines[i].trim(); if(!/^#EXTINF/i.test(l))continue;
+  let attrs={},m,re=/([\\w-]+)="([^"]*)"/g;while((m=re.exec(l)))attrs[m[1]]=m[2];
+  let p=l.indexOf(","),name=(p>=0?l.slice(p+1).trim():attrs["tvg-name"])||"Unknown",url="";
+  for(let j=i+1;j<lines.length;j++){let x=lines[j].trim();if(!x||x[0]==="#")continue;url=x;i=j;break}
+  if(url)out.push({num:out.length+1,name,group:attrs["group-title"]||"Other",logo:attrs["tvg-logo"]||"",lang:attrs["tvg-language"]||"",id:attrs["tvg-id"]||"",url});
+ }
+ return out;
+}
+function category(c){let s=(c.group+" "+c.name).toLowerCase();if(/news|न्यूज़|समाचार/.test(s))return"News";if(/movie|film|cinema|मूवी|फिल्म/.test(s))return"Movies";if(/music|म्यूजिक|संगीत/.test(s))return"Music";if(/sport|खेल/.test(s))return"Sports";if(/kids|cartoon|बच्च/.test(s))return"Kids";if(/bhakti|devotional|spiritual|भक्ति|धार्मिक/.test(s))return"Devotional";return c.group||"Other"}
+function renderCats(){let n={};channels.forEach(c=>n[category(c)]=(n[category(c)]||0)+1);$("cats").innerHTML=["All",...Object.keys(n).sort()].map(x=>`<button class="cat ${x===catSel?"active":""}" data-x="${esc(x)}">${esc(x)}${x==="All"?"":` (${n[x]})`}</button>`).join("");document.querySelectorAll(".cat").forEach(b=>b.onclick=()=>{catSel=b.dataset.x;renderCats();apply()})}
+function apply(){let q=query.toLowerCase().trim();filtered=channels.filter(c=>(catSel==="All"||category(c)===catSel)&&(!q||(c.name+" "+c.group+" "+c.lang+" "+c.num).toLowerCase().includes(q)));$("head").textContent=catSel==="All"?"All Channels":catSel;$("count").textContent=`${filtered.length} / ${channels.length}`;$("grid").innerHTML="";if(!filtered.length){$("grid").innerHTML='<div class="empty">कोई channel नहीं मिला।</div>';return}let i=0;function batch(){let f=document.createDocumentFragment();for(let n=0;n<80&&i<filtered.length;n++,i++)f.appendChild(card(filtered[i]));$("grid").appendChild(f);if(i<filtered.length)requestAnimationFrame(batch)}requestAnimationFrame(batch)}
+function card(c){let key=c.id||c.url,d=document.createElement("article");d.className="card";d.tabIndex=0;d.innerHTML=`<div class="ct"><img class="logo" loading="lazy" src="${esc(c.logo)}" onerror="this.style.visibility='hidden'"><div class="name">${esc(c.num)}. ${esc(c.name)}</div><button class="star">${favs.has(key)?"★":"☆"}</button></div><div class="meta">${esc(category(c))} · ${esc(c.group)}${c.lang?" · "+esc(c.lang):""}</div>`;d.onclick=e=>{if(e.target.closest(".star")){e.stopPropagation();favs.has(key)?favs.delete(key):favs.add(key);localStorage.setItem("iptv-v11-fav",JSON.stringify([...favs]));$("fav").textContent=favs.size;apply()}else play(c)};return d}
+function play(c){cur=filtered.findIndex(x=>x.url===c.url);$("title").textContent="▶ "+c.name;$("meta").textContent=category(c)+" · "+c.group;$("logo").src=c.logo||"";badge("CONNECTING");message("Stream connect हो रहा है…");const u=c.url;stop();if(/\\.m3u8($|\\?)/i.test(u)){if(video.canPlayType("application/vnd.apple.mpegurl")){video.src=u;video.play().catch(()=>{})}else loadHls(u)}else{video.src=u;video.play().catch(e=>message("Video play नहीं हुआ: "+e.message,"bad"))}}
+function stop(){if(hls){hls.destroy();hls=null}video.pause();video.removeAttribute("src");video.load()}
+function loadHls(u){if(window.Hls){startHls(u);return}let s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js";s.onload=()=>startHls(u);s.onerror=()=>message("HLS.js load नहीं हुई। Internet/CDN access check करें।","bad");document.head.appendChild(s)}
+function startHls(u){if(!window.Hls)return;hls=new Hls({enableWorker:true,lowLatencyMode:false});hls.loadSource(u);hls.attachMedia(video);hls.on(Hls.Events.MANIFEST_PARSED,()=>{badge("PLAYING");message("Stream चल रहा है।","ok");video.play().catch(()=>{})});hls.on(Hls.Events.ERROR,(e,d)=>{if(d.fatal){badge("ERROR");message("HLS error: "+(d.details||"fatal error"),"bad")}})}
+video.addEventListener("playing",()=>{badge("PLAYING");message("Stream चल रहा है।","ok")});video.addEventListener("waiting",()=>badge("BUFFERING"));video.addEventListener("error",()=>{if(video.error){badge("ERROR");message("Browser video error: "+video.error.message,"bad")}});
+async function fetchText(u){let r=await fetch(u,{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);let t=await r.text();if(!/^\\s*#EXTM3U/i.test(t))throw Error("M3U header नहीं मिला");return t}
+async function fetchApi(){let r=await fetch(API,{cache:"no-store",headers:{"Accept":"application/vnd.github+json"}});if(!r.ok)throw Error("GitHub API HTTP "+r.status);let j=await r.json();if(j.encoding==="base64"&&j.content)return atob(j.content.replace(/\\s/g,""));throw Error("GitHub API content unavailable")}
+async function load(){
+ $("load").textContent="Loading";badge("LOADING");
+ const cached=localStorage.getItem("iptv-v11-cache");if(cached){try{channels=JSON.parse(cached);finish();message("Cached playlist दिखाई जा रही है; latest playlist check हो रही है…")}catch{}}
+ let attempts=[LOCAL,PAGES,RAW];let errors=[];
+ for(const u of attempts){try{let t=await fetchText(u);let a=parse(t);if(!a.length)throw Error("0 channels");channels=a;localStorage.setItem("iptv-v11-cache",JSON.stringify(a));finish();message(`Playlist loaded: ${a.length} channels`,"ok");return}catch(e){errors.push(u+" → "+e.message)}}
+ if(!channels.length){try{let t=await fetchApi(),a=parse(t);if(!a.length)throw Error("0 channels");channels=a;finish();message(`Playlist loaded via GitHub API: ${a.length} channels`,"ok");return}catch(e){errors.push("API → "+e.message)}}
+ $("load").textContent="ERROR";badge("ERROR");message(`<b>Playlist load नहीं हुई.</b><br><span class="small">${errors.join("<br>")}</span><br><br><span class="small">GitHub repository के root में <b>in.m3u</b> होना चाहिए। अगर file बड़ी है तो GitHub API fallback सीमित हो सकता है।</span>`,"bad")}
+function finish(){$("total").textContent=channels.length;$("fav").textContent=favs.size;$("load").textContent="READY";renderCats();apply()}
+$("q").oninput=e=>{query=e.target.value;clearTimeout(window.qt);window.qt=setTimeout(apply,80)};$("clear").onclick=()=>{$("q").value="";query="";apply()};$("reload").onclick=()=>{localStorage.removeItem("iptv-v11-cache");load()};$("theme").onclick=()=>{let t=document.documentElement.dataset.theme==="light"?"dark":"light";document.documentElement.dataset.theme=t;localStorage.setItem("iptv-v11-theme",t)};$("prev").onclick=()=>{if(filtered.length)play(filtered[(cur-1+filtered.length)%filtered.length])};$("next").onclick=()=>{if(filtered.length)play(filtered[(cur+1)%filtered.length])};$("fs").onclick=()=>video.requestFullscreen?.();document.documentElement.dataset.theme=localStorage.getItem("iptv-v11-theme")||"dark";load();
+})();
+</script>
 </body>
 </html>

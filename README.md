@@ -1,34 +1,16 @@
-# IPTV INDIA Premium v10.2 — GitHub Pages repair build
+# IPTV INDIA v11
 
-## IMPORTANT
-Keep your existing `in.m3u` in the repository ROOT next to `index.html`:
+This repair build is intentionally a single self-contained `index.html` (plus manifest). It has no Video.js or service-worker dependency.
 
-IPTV-INDIA/
-  index.html
-  video.js
-  style.css
-  manifest.webmanifest
-  in.m3u
+## Required repository layout
+`index.html`, `in.m3u`, and `manifest.webmanifest` must be in the repository root used by GitHub Pages.
 
-This build intentionally does NOT use a service worker. That prevents an old cached JS file from making GitHub Pages appear broken.
+## Playlist loading order
+1. `./in.m3u`
+2. GitHub Pages `./in.m3u`
+3. GitHub Raw URL
+4. GitHub API fallback
 
-## What was repaired
-- Removed the hard dependency on Video.js at page startup.
-- Playlist UI can load even when a player CDN is unavailable.
-- Uses local `./in.m3u` first, then GitHub Raw as fallback.
-- Validates the M3U response before parsing.
-- Uses lazy HLS.js only when an HLS channel is actually opened.
-- Added clearer loading/error messages.
-- Removed stale service-worker caching.
-- Batched channel rendering for large playlists.
-- Search, categories, favorites, keyboard navigation and dark/light mode remain.
+The page displays the exact load errors if none work.
 
-## GitHub Pages steps
-1. Replace `index.html`, `video.js`, `style.css`, and `manifest.webmanifest` in the repository root.
-2. Do NOT delete your existing `in.m3u`; it must be in the same root folder.
-3. Commit changes to `main`.
-4. Open the Pages URL and press Ctrl+F5.
-5. If the old page still appears, open DevTools -> Application -> Storage -> Clear site data, then reload.
-
-## If channels show but a stream does not play
-That is usually a stream-side issue: HTTP mixed content, CORS, authentication, DRM, geo restriction, or provider availability. The web page cannot bypass those restrictions.
+If the page loads channels but an individual stream fails, the stream may use HTTP on an HTTPS page, CORS/authentication/DRM/geo restrictions, or may simply be unavailable.

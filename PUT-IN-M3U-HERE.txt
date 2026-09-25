@@ -1,0 +1,1 @@
+Keep your real in.m3u in the repository root next to index.html. This package cannot include your private/remote playlist contents.
